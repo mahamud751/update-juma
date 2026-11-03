@@ -1,0 +1,4 @@
+import {stories} from '@/lib/stories';import {notFound} from 'next/navigation';import Link from 'next/link';
+export function generateStaticParams(){return stories.map(s=>({slug:s.slug}))}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const{slug}=await params;return{title:stories.find(s=>s.slug===slug)?.title}}
+export default async function Page({params}:{params:Promise<{slug:string}>}){const{slug}=await params;const s=stories.find(s=>s.slug===slug);if(!s)notFound();return <article><div className="page-intro section"><p className="eyebrow">{s.tag} · THE JHUMA JOURNAL</p><h1>{s.title}</h1><p>{s.intro}</p></div><img className="story-image" src={`/media/card/${s.image}.jpg`} alt={s.title}/><div className="prose">{s.sections.map(([h,p])=><section key={h}><h2>{h}</h2><p>{p}</p></section>)}<Link className="button dark" href="/appointment">DISCOVER YOUR PIECE ↗</Link></div></article>}
